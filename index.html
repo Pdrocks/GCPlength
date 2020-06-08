@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script> 
+</head>
+<body>
+
+
+<div id="app1">
+{{temp}}<br/>
+{{jsondata}}
+</div>
+<script language="javascript">
+
+var temp="Hello";
+
+  	var app1 = new Vue({
+		el: "#app1",
+		data : {
+			temp : temp,
+			jsondata : []
+		}, 
+		mounted() {
+			var self = this;
+			axios.get("./gcpprefixformatlist.json").then(response => {this.jsondata = response.data; console.log("response="+JSON.stringify(response))});
+		}
+  	});
+
+
+
+</script>
+
+
+</body>
+</html>
