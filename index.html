@@ -20,28 +20,32 @@ GS1 Company Prefix: {{gcp}}  GCP Length={{l}}
 
 let i="";
 let keys=[
-	{"key":"GTIN-14","offset":1,"minLength":14},
-	{"key":"GTIN-13","offset":0,"minLength":13},
-	{"key":"SSCC","offset":1,"minLength":18},
-	{"key":"GLN","offset":0,"minLength":13},
-	{"key":"CPID","offset":0,"minLength":6},
-	{"key":"GCN","offset":0,"minLength":13},
-	{"key":"GDTI","offset":0,"minLength":13},
-	{"key":"GIAI","offset":0,"minLength":17},
-	{"key":"GINC","offset":0,"minLength":6},
-	{"key":"GMN","offset":0,"minLength":6},
-	{"key":"GRAI","offset":1,"minLength":14},
-	{"key":"GSIN","offset":0,"minLength":17},
-	{"key":"GSRN-P","offset":0,"minLength":18},
-	{"key":"GSRN","offset":0,"minLength":18},
-	{"key":"ITIP","offset":1,"minLength":18}
+	{"key":"GTIN-14","offset":1,"minLength":14,"leftPad":""},
+	{"key":"GTIN-13","offset":0,"minLength":13,"leftPad":""},
+	{"key":"GTIN-12","offset":0,"minLength":132,"leftPad":"0"},
+	{"key":"SSCC","offset":1,"minLength":18,"leftPad":""},
+	{"key":"GLN","offset":0,"minLength":13,"leftPad":""},
+	{"key":"CPID","offset":0,"minLength":6,"leftPad":""},
+	{"key":"GCN","offset":0,"minLength":13,"leftPad":""},
+	{"key":"GDTI","offset":0,"minLength":13,"leftPad":""},
+	{"key":"GIAI","offset":0,"minLength":17,"leftPad":""},
+	{"key":"GINC","offset":0,"minLength":6,"leftPad":""},
+	{"key":"GMN","offset":0,"minLength":6,"leftPad":""},
+	{"key":"GRAI","offset":1,"minLength":14,"leftPad":""},
+	{"key":"GSIN","offset":0,"minLength":17,"leftPad":""},
+	{"key":"GSRN-P","offset":0,"minLength":18,"leftPad":""},
+	{"key":"GSRN","offset":0,"minLength":18,"leftPad":""},
+	{"key":"ITIP","offset":1,"minLength":18,"leftPad":""}
 ];
 
 let offsets={};
 let minLengths={};
+let leftPads={};
+
 keys.forEach(function(k){
 	offsets[k.key]=k.offset;
 	minLengths[k.key]=k.minLength;
+	leftPads[k.key]=k.leftPad;
 });
 
 
@@ -62,13 +66,14 @@ selectedKey=keys[0].key;
 			selectedKey : selectedKey,
 			offsets: offsets,
 			minLengths: minLengths,
+			leftPads: leftPads,
 			jsondata : []
 		}, 
 		computed: {
 			v: function() {
 				let rv="";
 				if ((this.i !== "") && (this.offset !== "")) {
-					rv=this.i.substr(parseInt(this.offset));
+					rv=this.leftPad+this.i.substr(parseInt(this.offset));
 				}
 				return rv;
 			},
@@ -97,6 +102,15 @@ selectedKey=keys[0].key;
 				let rv="";
 				if (this.selectedKey !== "") {
 					rv=this.minLengths[this.selectedKey];
+				} else {
+					rv="";
+				}
+				return rv;
+			},
+			leftPad: function() {
+				let rv="";
+				if (this.selectedKey !== "") {
+					rv=this.leftPads[this.selectedKey];
 				} else {
 					rv="";
 				}
