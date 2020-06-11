@@ -10,33 +10,39 @@
 
 <div id="app1">
 <select v-model="selectedKey">
-	<option v-for="k in keys" :value="k">{{k}}</option>
+	<option v-for="k in keys" :value="k.key">{{k.key}}</option>
 </select>
-<input type="text" v-model="i" style="width: 20em;"><br/>
-Length: {{l}}	
-Selected key: {{selectedKey}}
+<input type="text" v-model="i" style="width: 20em;"><span v-if="i.length < minLength">{{minLength}} digits required</span><br/>
+<br/>
+GS1 Company Prefix: {{gcp}}  GCP Length={{l}}
 </div>
-<script language=s""javascript">
+<script language="javascript">
 
 let i="";
 let keys=[
-	{"key":"GTIN-14","offset":1},
-	{"key":"GTIN-13","offset":0},
-	{"key":"GTIN-12","offset":0},
-	{"key":"SSCC","offset":1},
-	{"key":"GLN","offset":0},
-	{"key":"CPID","offset":0},
-	{"key":"GCN","offset":0},
-	{"key":"GDTI","offset":0},
-	{"key":"GIAI","offset":0},
-	{"key":"GINC","offset":0},
-	{"key":"GMN","offset":0},
-	{"key":"GRAI","offset":1},
-	{"key":"GSIN","offset":0},
-	{"key":"GSRN-P","offset":0},
-	{"key":"GSRN","offset":0},
-	{"key":"ITIP","offset":1}
+	{"key":"GTIN-14","offset":1,"minLength":14},
+	{"key":"GTIN-13","offset":0,"minLength":13},
+	{"key":"SSCC","offset":1,"minLength":18},
+	{"key":"GLN","offset":0,"minLength":13},
+	{"key":"CPID","offset":0,"minLength":6},
+	{"key":"GCN","offset":0,"minLength":13},
+	{"key":"GDTI","offset":0,"minLength":13},
+	{"key":"GIAI","offset":0,"minLength":17},
+	{"key":"GINC","offset":0,"minLength":6},
+	{"key":"GMN","offset":0,"minLength":6},
+	{"key":"GRAI","offset":1,"minLength":14},
+	{"key":"GSIN","offset":0,"minLength":17},
+	{"key":"GSRN-P","offset":0,"minLength":18},
+	{"key":"GSRN","offset":0,"minLength":18},
+	{"key":"ITIP","offset":1,"minLength":18}
 ];
+
+let offsets={};
+let minLengths={};
+keys.forEach(function(k){
+	offsets[k.key]=k.offset;
+	minLengths[k.key]=k.minLength;
+});
 
 
 function findMatch(v) {
@@ -46,7 +52,7 @@ function findMatch(v) {
 }
 			      
 			      
-let selectedKey="";
+selectedKey=keys[0].key;
 
   	var app1 = new Vue({
 		el: "#app1",
@@ -54,13 +60,22 @@ let selectedKey="";
 			i: i,
 			keys: keys,
 			selectedKey : selectedKey,
+			offsets: offsets,
+			minLengths: minLengths,
 			jsondata : []
 		}, 
 		computed: {
+			v: function() {
+				let rv="";
+				if ((this.i !== "") && (this.offset !== "")) {
+					rv=this.i.substr(parseInt(this.offset));
+				}
+				return rv;
+			},
 			l: function() {
 				let rv="";
-				if (this.i !== "") {
-					let e=this.jsondata.GCPPrefixFormatList.entry.filter(findMatch(this.i));
+				if (this.v !== "") {
+					let e=this.jsondata.GCPPrefixFormatList.entry.filter(findMatch(this.v));
 					if (e.length == 1) {
 						rv=e[0].gcpLength;
 					} else {
@@ -68,11 +83,38 @@ let selectedKey="";
 					}
 				}
 				return rv;
+			},
+			offset: function() {
+				let rv="";
+				if (this.selectedKey !== "") {
+					rv=this.offsets[this.selectedKey];
+				} else {
+					rv="";
+				}
+				return rv;
+			},
+			minLength: function() {
+				let rv="";
+				if (this.selectedKey !== "") {
+					rv=this.minLengths[this.selectedKey];
+				} else {
+					rv="";
+				}
+				return rv;
+			},
+			gcp: function() {
+				let rv="";
+				if ((this.v !== "") &&  (this.l !== "") && (this.i.length  >= this.minLength)) {
+					rv=this.v.substr(0, parseInt(this.l));
+				} else {
+					rv="";
+				}
+				return rv;
 			}
 		},
 		mounted() {
 			var self = this;
-			axios.get("./gcpprefixformatlist.json").then(response => {this.jsondata = response.data; console.log("response="+JSON.stringify(response))});
+			axios.get("./gcpprefixformatlist.json").then(response => {this.jsondata = response.data; });
 		}
   	});
 
