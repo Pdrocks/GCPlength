@@ -9,12 +9,34 @@
 
 
 <div id="app1">
-<input type="text" v-model="i"><br/>
+<select v-model="selectedKey">
+	<option v-for="k in keys" :value="k">{{k.key}}</option>
+	</select>
+<input type="text" v-model="i" style="width: 20em;"><br/>
 Length: {{l}}	
+Selected key: {{selectedKey}}
 </div>
-<script language="javascript">
+<script language=s""javascript">
 
-let i=""
+let i="";
+let keys=[
+	{"key":"GTIN-14","offset":1},
+	{"key":"GTIN-13","offset":0},
+	{"key":"GTIN-12","offset":0},
+	{"key":"SSCC","offset":1},
+	{"key":"GLN","offset":0},
+	{"key":"CPID","offset":0},
+	{"key":"GCN","offset":0},
+	{"key":"GDTI","offset":0},
+	{"key":"GIAI","offset":0},
+	{"key":"GINC","offset":0},
+	{"key":"GMN","offset":0},
+	{"key":"GRAI","offset":1},
+	{"key":"GSIN","offset":0},
+	{"key":"GSRN-P","offset":0},
+	{"key":"GSRN","offset":0},
+	{"key":"ITIP","offset":1}
+];
 
 
 function findMatch(v) {
@@ -22,12 +44,16 @@ function findMatch(v) {
         return v.indexOf(element.prefix) == 0;
     }
 }
-	
+			      
+			      
+selectedKey="";
 
   	var app1 = new Vue({
 		el: "#app1",
 		data : {
 			i: i,
+			keys: keys,
+			selectedKey : selectedKey,
 			jsondata : []
 		}, 
 		computed: {
