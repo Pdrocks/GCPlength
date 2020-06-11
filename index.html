@@ -19,7 +19,7 @@ let i=""
 
 function findMatch(v) {
     return function(element) {
-        return element.prefix == v;
+        return v.indexOf(element.prefix) == 0;
     }
 }
 	
