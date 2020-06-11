@@ -34,7 +34,7 @@ function findMatch(v) {
 			l: function() {
 				let rv="";
 				if (this.i !== "") {
-					rv=jsondata.GCPPrefixFormatList.entry.filter(findMatch("300"));
+					rv=this.jsondata.GCPPrefixFormatList.entry.filter(findMatch("300"));
 				}
 				return rv;
 			}
