@@ -9,17 +9,28 @@
 
 
 <div id="app1">
-{{jsondata}}
+<input type="text" v-model="i"><br/>
+Length: {{l}}	
 </div>
 <script language="javascript">
 
-
+let i=""
 
   	var app1 = new Vue({
 		el: "#app1",
 		data : {
+			i: i,
 			jsondata : []
 		}, 
+		computed: {
+			l: function() {
+				let rv="";
+				if (this.i !== "") {
+					rv=8;
+				}
+				return rv;
+			}
+		},
 		mounted() {
 			var self = this;
 			axios.get("./gcpprefixformatlist.json").then(response => {this.jsondata = response.data; console.log("response="+JSON.stringify(response))});
