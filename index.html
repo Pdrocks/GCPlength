@@ -16,6 +16,14 @@ Length: {{l}}
 
 let i=""
 
+
+function findMatch(v) {
+    return function(element) {
+        return element.prefix == v;
+    }
+}
+	
+
   	var app1 = new Vue({
 		el: "#app1",
 		data : {
@@ -26,7 +34,7 @@ let i=""
 			l: function() {
 				let rv="";
 				if (this.i !== "") {
-					rv=8;
+					rv=jsondata.GCPPrefixFormatList.entry.filter(findMatch("300"));
 				}
 				return rv;
 			}
