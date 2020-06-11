@@ -20,32 +20,34 @@ GS1 Company Prefix: {{gcp}}  GCP Length={{l}}
 
 let i="";
 let keys=[
-	{"key":"GTIN-14","offset":1,"minLength":14,"leftPad":""},
-	{"key":"GTIN-13","offset":0,"minLength":13,"leftPad":""},
-	{"key":"GTIN-12","offset":0,"minLength":12,"leftPad":"0"},
-	{"key":"SSCC","offset":1,"minLength":18,"leftPad":""},
-	{"key":"GLN","offset":0,"minLength":13,"leftPad":""},
-	{"key":"CPID","offset":0,"minLength":6,"leftPad":""},
-	{"key":"GCN","offset":0,"minLength":13,"leftPad":""},
-	{"key":"GDTI","offset":0,"minLength":13,"leftPad":""},
-	{"key":"GIAI","offset":0,"minLength":17,"leftPad":""},
-	{"key":"GINC","offset":0,"minLength":6,"leftPad":""},
-	{"key":"GMN","offset":0,"minLength":6,"leftPad":""},
-	{"key":"GRAI","offset":1,"minLength":14,"leftPad":""},
-	{"key":"GSIN","offset":0,"minLength":17,"leftPad":""},
-	{"key":"GSRN-P","offset":0,"minLength":18,"leftPad":""},
-	{"key":"GSRN","offset":0,"minLength":18,"leftPad":""},
-	{"key":"ITIP","offset":1,"minLength":18,"leftPad":""}
+	{"key":"GTIN-14","offset":1,"minLength":14,"leftPad":"","checkDigitPos":"L"},
+	{"key":"GTIN-13","offset":0,"minLength":13,"leftPad":"","checkDigitPos":"L"},
+	{"key":"GTIN-12","offset":0,"minLength":12,"leftPad":"0","checkDigitPos":"L"},
+	{"key":"SSCC","offset":1,"minLength":18,"leftPad":"","checkDigitPos":"L"},
+	{"key":"GLN","offset":0,"minLength":13,"leftPad":"","checkDigitPos":"L"},
+	{"key":"CPID","offset":0,"minLength":6,"leftPad":"","checkDigitPos":""},
+	{"key":"GCN","offset":0,"minLength":13,"leftPad":"","checkDigitPos":"13"},
+	{"key":"GDTI","offset":0,"minLength":13,"leftPad":"","checkDigitPos":"13"},
+	{"key":"GIAI","offset":0,"minLength":17,"leftPad":"","checkDigitPos":""},
+	{"key":"GINC","offset":0,"minLength":6,"leftPad":"","checkDigitPos":""},
+	{"key":"GMN","offset":0,"minLength":6,"leftPad":"","checkDigitPos":""},
+	{"key":"GRAI","offset":1,"minLength":14,"leftPad":"","checkDigitPos":"14"},
+	{"key":"GSIN","offset":0,"minLength":17,"leftPad":"","checkDigitPos":"17"},
+	{"key":"GSRN-P","offset":0,"minLength":18,"leftPad":"","checkDigitPos":"18"},
+	{"key":"GSRN","offset":0,"minLength":18,"leftPad":"","checkDigitPos":"18"},
+	{"key":"ITIP","offset":1,"minLength":18,"leftPad":"","checkDigitPos":"14"}
 ];
 
 let offsets={};
 let minLengths={};
 let leftPads={};
+let checkDigitPositions={};
 
 keys.forEach(function(k){
 	offsets[k.key]=k.offset;
 	minLengths[k.key]=k.minLength;
 	leftPads[k.key]=k.leftPad;
+	checkDigitPositions[k.key]=k.checkDigitPos;
 });
 
 
@@ -67,6 +69,7 @@ selectedKey=keys[0].key;
 			offsets: offsets,
 			minLengths: minLengths,
 			leftPads: leftPads,
+			checkDigitPositions: checkDigitPositions,
 			jsondata : []
 		}, 
 		computed: {
@@ -111,6 +114,15 @@ selectedKey=keys[0].key;
 				let rv="";
 				if (this.selectedKey !== "") {
 					rv=this.leftPads[this.selectedKey];
+				} else {
+					rv="";
+				}
+				return rv;
+			},
+			checkDigitPos: function() {
+				let rv="";
+				if (this.selectedKey !== "") {
+					rv=this.checkDigitPositions[this.selectedKey];
 				} else {
 					rv="";
 				}
