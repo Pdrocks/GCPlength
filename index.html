@@ -37,7 +37,9 @@ function findMatch(v) {
 					let e=this.jsondata.GCPPrefixFormatList.entry.filter(findMatch(this.i));
 					if (e.length == 1) {
 						rv=e[0].gcpLength;
-					} 
+					} else {
+						rv="";
+					}
 				}
 				return rv;
 			}
